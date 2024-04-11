@@ -42,7 +42,7 @@ def rekogIndexFaces(bucket, key, collectionId, externalImageId):
                 'Name': key
             }
         },
-        DetectionAttributes=['ALL'],
+        DetectionAttributes=os.environ['faceAttributes'].split(','),
         ExternalImageId=externalImageId,
         QualityFilter=os.environ['qualityfilter']
     )
