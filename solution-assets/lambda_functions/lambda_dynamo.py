@@ -21,7 +21,8 @@ def lambda_handler(event, context):
                 'OldFaceId': {'S': str(face["OldFaceId"])},
                 'OldImageId': {'S': str(face["OldImageId"])},
                 'ImageId': {'S': str(face["ImageId"])},
-                'BoundingBoxes':{'S': json.dumps(face["BoundingBoxes"])}
+                'BoundingBoxes':{'S': json.dumps(face["BoundingBoxes"])},
+                'FaceDetail':{'S': json.dumps(face["FaceDetail"])}
             }
             
             if "IsNewFace" in face:
