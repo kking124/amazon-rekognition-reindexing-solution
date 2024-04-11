@@ -20,6 +20,11 @@ Parameters:
     Description: A filter that specifies a quality bar for how much filtering is done to identify faces. Filtered faces aren't indexed. If you specify AUTO, Amazon Rekognition chooses the quality bar. If you specify LOW, MEDIUM, or HIGH, filtering removes all faces that don't meet the chosen quality bar. The default value is AUTO.
     Default: "AUTO"
 
+  RekognitionIndexFacesDetailAttributes:
+    Type: List<String>
+    Description: An array of facial attributes you want to be returned. A DEFAULT subset of facial attributes - BoundingBox, Confidence, Pose, Quality, and Landmarks - will always be returned. You can request for specific facial attributes (in addition to the default list) - by using ["DEFAULT", "FACE_OCCLUDED"] or just ["FACE_OCCLUDED"]. You can request for all facial attributes by using ["ALL"]. Requesting more attributes may increase response time. Valid Values: DEFAULT, ALL, AGE_RANGE, BEARD, EMOTIONS, EYE_DIRECTION, EYEGLASSES, EYES_OPEN, GENDER, MOUTH_OPEN, MUSTACHE, FACE_OCCLUDED, SMILE, SUNGLASSES
+    Default: ["Default"]
+    
 Resources:
 
   RecordsBucket:
@@ -116,6 +121,7 @@ Resources:
           dynamosqsurl: !Ref ResultsToDynamoQueue
           qualityfilter: !Ref RekognitionIndexFacesQualityFilter
           dynamologs: !Ref DynamoDBLogsTable
+          faceAttributes: !Join [",", !Ref RekognitionIndexFacesDetailAttributes]
       Role: !GetAtt ReindexFunctionRole.Arn
       Runtime: python3.12
       Timeout: 30
