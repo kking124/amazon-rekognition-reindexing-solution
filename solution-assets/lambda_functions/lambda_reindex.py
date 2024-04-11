@@ -42,6 +42,7 @@ def rekogIndexFaces(bucket, key, collectionId, externalImageId):
                 'Name': key
             }
         },
+        DetectionAttributes=['ALL'],
         ExternalImageId=externalImageId,
         QualityFilter=os.environ['qualityfilter']
     )
@@ -144,7 +145,8 @@ def lambda_handler(event, context):
                             "FaceId": rekogIndexFace["FaceId"],
                             "ImageId": rekogIndexFace["ImageId"],
                             "BoundingBoxes": rekogIndexFace["BoundingBox"],
-                            "IsNewFace": False
+                            "IsNewFace": False,
+                            "FaceDetail": rekogIndexedFaces[0]["FaceDetail"]
                         }]
                     }
 
@@ -161,7 +163,8 @@ def lambda_handler(event, context):
                             "FaceId": rekogIndexFace["FaceId"],
                             "ImageId": rekogIndexFace["ImageId"],
                             "BoundingBoxes": rekogIndexFace["BoundingBox"],
-                            "IsNewFace": True
+                            "IsNewFace": True,
+                            "FaceDetail": rekogIndexedFaces[0]["FaceDetail"]
                         }]
                     }
                     sendLogstoDynamo(payload, "Not able to map face found.")
@@ -191,7 +194,8 @@ def lambda_handler(event, context):
                             "FaceId": indexedface["Face"]["FaceId"],
                             "ImageId": indexedface["Face"]["ImageId"],
                             "BoundingBoxes": indexedface["Face"]["BoundingBox"],
-                            "IsNewFace": False
+                            "IsNewFace": False,
+                            "FaceDetail": indexedFace["FaceDetail"]
                         })
                     else:
                         updatedRecords["Faces"].append({
@@ -201,7 +205,8 @@ def lambda_handler(event, context):
                             "FaceId": indexedface["Face"]["FaceId"],
                             "ImageId": indexedface["Face"]["ImageId"],
                             "BoundingBoxes": indexedface["Face"]["BoundingBox"],
-                            "IsNewFace": True
+                            "IsNewFace": True,
+                            "FaceDetail": indexedFace["FaceDetail"]
                         })
 
                 sendResultstoDynamo(updatedRecords)
@@ -249,7 +254,8 @@ def lambda_handler(event, context):
                             "FaceId": rekogIndexedFace["FaceId"],
                             "ImageId": rekogIndexedFace["ImageId"],
                             "BoundingBoxes": rekogIndexedFace["BoundingBox"],
-                            "IsNewFace": False
+                            "IsNewFace": False,
+                            "FaceDetail": rekogIndexedFaces[0]["FaceDetail"]
                         })
                     else:
                         updatedRecords["Faces"].append({
@@ -258,7 +264,8 @@ def lambda_handler(event, context):
                             "OldImageId": providedFace["ImageId"],
                             "FaceId": "Not reindexed",
                             "ImageId": "Not reindexed",
-                            "BoundingBoxes": "Not reindexed"
+                            "BoundingBoxes": "Not reindexed",
+                            "FaceDetail": "Not reindexed"
                         })
                 sendLogstoDynamo(payload, ">1 face expected, only 1 face found.")
                 sendResultstoDynamo(updatedRecords)
@@ -288,7 +295,8 @@ def lambda_handler(event, context):
                                 "FaceId": rekogIndexedFace["Face"]["FaceId"],
                                 "ImageId": rekogIndexedFace["Face"]["ImageId"],
                                 "BoundingBoxes": rekogIndexedFace["Face"]["BoundingBox"],
-                                "IsNewFace": False
+                                "IsNewFace": False,
+                                "FaceDetail": rekogIndexedFace["FaceDetail"]
                             })
                             matchedFace = True
                             break
@@ -301,7 +309,8 @@ def lambda_handler(event, context):
                             "FaceId": rekogIndexedFace["Face"]["FaceId"],
                             "ImageId": rekogIndexedFace["Face"]["ImageId"],
                             "BoundingBoxes": rekogIndexedFace["Face"]["BoundingBox"],
-                            "IsNewFace": True
+                            "IsNewFace": True,
+                            "FaceDetail": rekogIndexedFace["FaceDetail"]
                         })
                         sendLogstoDynamo(payload, "Not able to match indexed faces to any of the original input.")
 
